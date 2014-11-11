@@ -24,14 +24,15 @@ private:
 	void							setSelectTimeout(mySelect&);
 	void							updateStrangersTimeout(mySelect&);
 	void							process(mySelect&);
+	void							updateData();
 
 private:
 	Database						_database;
 	myTCPServer						_server;
 
-	std::list<std::pair<myTCPRemoteClient*,
+	std::list<std::pair<ITCPRemoteClient*,
 		unsigned long long int>>	_strangers;
-	std::list<std::pair<myTCPRemoteClient*,
+	std::list<std::pair<ITCPRemoteClient*,
 		UserData&>>					_clients;
 
 	short							_port;

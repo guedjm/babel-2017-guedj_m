@@ -10,11 +10,12 @@
 *.pdb
 *.log
 *.vcxproj.user
-*.orig
 
 
 # Files to ignore
+
 babel_users.db
+
 
 # Folders to ignore
 

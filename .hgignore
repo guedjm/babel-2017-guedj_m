@@ -22,3 +22,5 @@ babel_users.db
 
 build/*
 Debug/*
+.hg/*
+.git/*

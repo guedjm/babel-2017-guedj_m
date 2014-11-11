@@ -5,7 +5,7 @@
 #define TCP_MAGIC_C				(7)
 #define BUFFER_SIZE				(4096)
 #define MAX_FRIENDS				(20)
-#define AUTH_TIMEOUT			(60000000)
+#define AUTH_TIMEOUT			(10000000)
 #define USEC_TO_SEC				(1000000)
 
 #define DEFAULT_PORT			"27015"

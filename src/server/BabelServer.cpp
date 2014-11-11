@@ -31,7 +31,7 @@ void					BabelServer::start()
 void					BabelServer::setSelectTimeout(mySelect& bs)
 {
 	unsigned long long int timeout = (unsigned long long int)-1;
-	for (std::list<std::pair<myTCPRemoteClient*, unsigned long long int>>::iterator it = this->_strangers.begin(); it != this->_strangers.end(); ++it)
+	for (std::list<std::pair<ITCPRemoteClient*, unsigned long long int>>::iterator it = this->_strangers.begin(); it != this->_strangers.end(); ++it)
 	{
 		if (it->second < timeout)
 			timeout = it->second;
@@ -56,7 +56,7 @@ void					BabelServer::updateStrangersTimeout(mySelect& bs)
 		long usec;
 		bs.getRemainingTime(sec, usec);
 		unsigned long long int timeDiff = this->_lastTimeout - sec * USEC_TO_SEC - usec;
-		for (std::list<std::pair<myTCPRemoteClient*, unsigned long long int>>::iterator it = this->_strangers.begin(); it != this->_strangers.end(); ++it)
+		for (std::list<std::pair<ITCPRemoteClient*, unsigned long long int>>::iterator it = this->_strangers.begin(); it != this->_strangers.end(); ++it)
 		{
 			if (it->second <= timeDiff)
 				it->second = 0;
@@ -79,6 +79,27 @@ void					BabelServer::process(mySelect& bs)
 	{
 		if ((*it)->getReadFd() == 0)
 			this->_running = false;
+		else if (*it == &this->_server)
+		{
+			this->_strangers.push_front(std::pair<ITCPRemoteClient*, unsigned long long int>(this->_server.acceptClient(), AUTH_TIMEOUT));
+		}
+	}
+}
+
+void					BabelServer::updateData()
+{
+	std::list<std::pair<ITCPRemoteClient*, unsigned long long int>> toRemove;
+	for (std::list<std::pair<ITCPRemoteClient*, unsigned long long int>>::iterator it = this->_strangers.begin(); it != this->_strangers.end(); ++it)
+	{
+		if (it->second == 0)
+		{
+			toRemove.push_front(*it);
+		}
+	}
+	for (std::list<std::pair<ITCPRemoteClient*, unsigned long long int>>::iterator it = toRemove.begin(); it != toRemove.end(); ++it)
+	{
+		delete it->first;
+		this->_strangers.remove(*it);
 	}
 }
 
@@ -94,5 +115,6 @@ void					BabelServer::loop()
 		babelSelect.start();
 		this->updateStrangersTimeout(babelSelect);
 		this->process(babelSelect);
+		this->updateData();
 	}
 }

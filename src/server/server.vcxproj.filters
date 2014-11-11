@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\abstraction\LinuxTCPClient.cpp">
+      <Filter>Source Files\Abstractions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\abstraction\LinuxTCPRemoteClient.cpp">
+      <Filter>Source Files\Abstractions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\abstraction\LinuxTCPServer.cpp">
+      <Filter>Source Files\Abstractions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\abstraction\LinuxTCPSocket.cpp">
+      <Filter>Source Files\Abstractions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\abstraction\WindowsTCPClient.cpp">
+      <Filter>Source Files\Abstractions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\abstraction\WindowsTCPRemoteClient.cpp">
+      <Filter>Source Files\Abstractions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\abstraction\WindowsTCPServer.cpp">
+      <Filter>Source Files\Abstractions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\abstraction\WindowsTCPSocket.cpp">
+      <Filter>Source Files\Abstractions</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\abstraction\LinuxSelect.cpp">
+      <Filter>Source Files\Abstractions</Filter>
+    </ClCompile>
+    <ClCompile Include="UserData.cpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Database.cpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\FileSerializer.cpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="BabelServer.cpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\abstraction\WindowsSelect.cpp">
+      <Filter>Source Files\Abstractions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\StandardInput.cpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\abstraction\IObservable.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\IReadable.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\ITCPClient.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\ITCPRemoteClient.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\ITCPServer.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\ITCPSocket.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\IWritable.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\LinuxTCPClient.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\LinuxTCPRemoteClient.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\LinuxTCPServer.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\LinuxTCPSocket.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\myTCPClient.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\myTCPRemoteClient.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\myTCPServer.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\myTCPSocket.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\WindowsTCPClient.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\WindowsTCPRemoteClient.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\WindowsTCPServer.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\WindowsTCPSocket.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\LinuxSelect.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\ISelect.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\constant.h">
+      <Filter>Header Files\Requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\eCommandId.h">
+      <Filter>Header Files\Requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\eErrorCode.h">
+      <Filter>Header Files\Requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\TCPPacketHeader.h">
+      <Filter>Header Files\Requests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\mySelect.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="UserData.h">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="BabelServer.h">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Database.h">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\FileSerializer.h">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\Serializer.hpp">
+      <Filter>Source Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\abstraction\WindowsSelect.h">
+      <Filter>Header Files\Abstractions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\StandardInput.h">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{31ec0b81-85ca-4f85-85bf-9a42d2831522}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4ccc1b0d-e4a5-4740-813b-db0ce2ca3234}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Requests">
+      <UniqueIdentifier>{90ce6118-3d7c-4cbf-9e0e-d411477d9a87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Abstractions">
+      <UniqueIdentifier>{1627231b-fbff-41ff-a4fe-2b5c092677ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Abstractions">
+      <UniqueIdentifier>{749da5c1-e301-4b5c-b4fa-7b0d9ad5a5d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Requests">
+      <UniqueIdentifier>{56420c2d-c694-4261-b201-7528c601682e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Misc">
+      <UniqueIdentifier>{2675c07c-23aa-4898-9fd0-dd1dc689ddac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Misc">
+      <UniqueIdentifier>{7141e1cd-be75-4f8a-9cf4-99eb03cd3414}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

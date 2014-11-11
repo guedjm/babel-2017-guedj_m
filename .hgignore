@@ -1,0 +1,24 @@
+syntax: glob
+
+
+# Filetypes to ignore
+
+*.sdf
+*.suo
+*.opensdf
+*.exe
+*.tlog
+*.obj
+*.idb
+*.pdb
+*.log
+*.vcxproj.user
+
+
+# Files to ignore
+babel_users.db
+
+# Folders to ignore
+
+build/*
+Debug/*

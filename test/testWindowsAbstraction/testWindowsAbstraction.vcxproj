@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{338F3698-0CAE-4AC7-B68C-CB3289E99394}</ProjectGuid>
+    <RootNamespace>testWindowsAbstraction</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)\src\abstraction;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)\src\abstraction\;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\abstraction\IObservable.h" />
+    <ClInclude Include="..\..\src\abstraction\IReadable.h" />
+    <ClInclude Include="..\..\src\abstraction\ITCPClient.h" />
+    <ClInclude Include="..\..\src\abstraction\ITCPRemoteClient.h" />
+    <ClInclude Include="..\..\src\abstraction\ITCPServer.h" />
+    <ClInclude Include="..\..\src\abstraction\ITCPSocket.h" />
+    <ClInclude Include="..\..\src\abstraction\IUDPServer.h" />
+    <ClInclude Include="..\..\src\abstraction\IUDPSocket.h" />
+    <ClInclude Include="..\..\src\abstraction\IWritable.h" />
+    <ClInclude Include="..\..\src\abstraction\LinuxTCPClient.h" />
+    <ClInclude Include="..\..\src\abstraction\LinuxTCPRemoteClient.h" />
+    <ClInclude Include="..\..\src\abstraction\LinuxTCPServer.h" />
+    <ClInclude Include="..\..\src\abstraction\LinuxTCPSocket.h" />
+    <ClInclude Include="..\..\src\abstraction\myTCPClient.h" />
+    <ClInclude Include="..\..\src\abstraction\myTCPRemoteClient.h" />
+    <ClInclude Include="..\..\src\abstraction\myTCPServer.h" />
+    <ClInclude Include="..\..\src\abstraction\myTCPSocket.h" />
+    <ClInclude Include="..\..\src\abstraction\WindowsTCPClient.h" />
+    <ClInclude Include="..\..\src\abstraction\WindowsTCPRemoteClient.h" />
+    <ClInclude Include="..\..\src\abstraction\WindowsTCPServer.h" />
+    <ClInclude Include="..\..\src\abstraction\WindowsTCPSocket.h" />
+    <ClInclude Include="..\..\src\abstraction\WindowsUDPServer.h" />
+    <ClInclude Include="..\..\src\abstraction\WindowsUDPSocket.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\abstraction\LinuxTCPClient.cpp" />
+    <ClCompile Include="..\..\src\abstraction\LinuxTCPRemoteClient.cpp" />
+    <ClCompile Include="..\..\src\abstraction\LinuxTCPServer.cpp" />
+    <ClCompile Include="..\..\src\abstraction\LinuxTCPSocket.cpp" />
+    <ClCompile Include="..\..\src\abstraction\WindowsTCPClient.cpp" />
+    <ClCompile Include="..\..\src\abstraction\WindowsTCPRemoteClient.cpp" />
+    <ClCompile Include="..\..\src\abstraction\WindowsTCPServer.cpp" />
+    <ClCompile Include="..\..\src\abstraction\WindowsTCPSocket.cpp" />
+    <ClCompile Include="..\..\src\abstraction\WindowsUDPServer.cpp" />
+    <ClCompile Include="..\..\src\abstraction\WindowsUDPSocket.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

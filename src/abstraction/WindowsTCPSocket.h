@@ -2,8 +2,8 @@
 #ifdef _WIN32
 
 # include <winsock2.h>
-# include <windows.h>
 # include <ws2tcpip.h>
+# include <windows.h>
 # include <stdlib.h>
 # include <stdio.h>
 # pragma comment(lib, "Ws2_32.lib")
@@ -33,8 +33,9 @@ public:
 	virtual int		receive(std::string &);
 	virtual int		sendData(std::string const &, int);
 
-	static void		initialize();
-	static void		cleanup();
+	static void			initialize();
+	static void			cleanup();
+	static std::string	getLastError();
 
 private:
 	int 				_fd;

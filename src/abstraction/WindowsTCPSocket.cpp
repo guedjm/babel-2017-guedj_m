@@ -1,29 +1,11 @@
 #ifdef _WIN32
 
+#include <strsafe.h>
+
 #include "WindowsTCPSocket.h"
 #include "constant.h"
 
 bool WindowsTCPSocket::_initialized = false;
-
-WindowsTCPSocket::WindowsTCPSocket()
-{
-	WindowsTCPSocket::initialize();
-	memset(&this->_addr, 0, sizeof(this->_addr));
-	this->_result = NULL;
-	this->_clientSocket = INVALID_SOCKET;
-}
-
-WindowsTCPSocket::WindowsTCPSocket(struct sockaddr_in &addr, int fd)
-{
-	this->_fd = fd;
-	this->_clientSocket = fd;
-	memcpy(&this->_addr, &addr, sizeof(addr));
-}
-
-WindowsTCPSocket::~WindowsTCPSocket()
-{
-}
-
 
 void		WindowsTCPSocket::initialize()
 {
@@ -44,10 +26,49 @@ void		WindowsTCPSocket::cleanup()
 		WindowsTCPSocket::_initialized = false;
 		int ret = WSACleanup();
 		if (ret != 0)
-			throw std::runtime_error("WSACleanup failed");
+			throw std::runtime_error("WSACleanup failed: " + WindowsTCPSocket::getLastError());
 	}
 }
 
+std::string	WindowsTCPSocket::getLastError()
+{
+	LPVOID lpMsgBuf;
+	DWORD dw = WSAGetLastError();
+
+	FormatMessage(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER |
+		FORMAT_MESSAGE_FROM_SYSTEM |
+		FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL,
+		dw,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPTSTR)&lpMsgBuf,
+		0, NULL);
+
+	std::string r((LPTSTR)&lpMsgBuf);
+	LocalFree(lpMsgBuf);
+	return r;
+}
+
+
+WindowsTCPSocket::WindowsTCPSocket()
+{
+	WindowsTCPSocket::initialize();
+	memset(&this->_addr, 0, sizeof(this->_addr));
+	this->_result = NULL;
+	this->_clientSocket = INVALID_SOCKET;
+}
+
+WindowsTCPSocket::WindowsTCPSocket(struct sockaddr_in &addr, int fd)
+{
+	this->_fd = fd;
+	this->_clientSocket = fd;
+	memcpy(&this->_addr, &addr, sizeof(addr));
+}
+
+WindowsTCPSocket::~WindowsTCPSocket()
+{
+}
 
 int			WindowsTCPSocket::init()
 {
@@ -58,16 +79,19 @@ int			WindowsTCPSocket::init()
 	this->_hints.ai_flags = AI_PASSIVE;
 
 	int ret = getaddrinfo(NULL, DEFAULT_PORT, &this->_hints, &this->_result);
-	if (ret != 0) {
-		WSACleanup();
-		throw std::runtime_error("getaddrinfo failed");
+	if (ret != 0)
+	{
+		std::string errorMessage = WindowsTCPSocket::getLastError();
+		WindowsTCPSocket::cleanup();
+		throw std::runtime_error("getaddrinfo failed: " + errorMessage);
 	}
 	this->_clientSocket = socket(this->_result->ai_family, this->_result->ai_socktype, this->_result->ai_protocol);
 	if (this->_clientSocket == INVALID_SOCKET)
 	{
+		std::string errorMessage = WindowsTCPSocket::getLastError();
 		freeaddrinfo(this->_result);
-		WSACleanup();
-		throw std::runtime_error("socket failed");
+		WindowsTCPSocket::cleanup();
+		throw std::runtime_error("socket failed: " + errorMessage);
 	}
 	else
 		this->_fd = this->_clientSocket;
@@ -76,8 +100,14 @@ int			WindowsTCPSocket::init()
 
 int 		WindowsTCPSocket::closeSock()
 {
-	closesocket(this->_clientSocket);
-	return (1);
+	int ret = closesocket(this->_clientSocket);
+	if (ret != 0)
+	{
+		std::string errorMessage = WindowsTCPSocket::getLastError();
+		WindowsTCPSocket::cleanup();
+		throw std::runtime_error("closesocket failed: " + errorMessage);
+	}
+	return (ret);
 }
 
 int 		WindowsTCPSocket::getFd() const
@@ -111,9 +141,9 @@ int 					WindowsTCPSocket::bindSock(std::string const &ip, short port)
 	iResult = bind(this->_clientSocket, (sockaddr *)(&this->_addr), sizeof(this->_addr));
 	if (iResult == SOCKET_ERROR)
 	{
-		closesocket(this->_clientSocket);
-		WSACleanup();
-		throw std::runtime_error("bind failed");
+		std::string errorMessage = WindowsTCPSocket::getLastError();
+		WindowsTCPSocket::cleanup();
+		throw std::runtime_error("bind failed: " + errorMessage);
 	}
 	return (1);
 }
@@ -125,8 +155,9 @@ int 					WindowsTCPSocket::listenSock(int backlog)
 	ret = listen(this->_clientSocket, backlog);
 	if (ret == SOCKET_ERROR)
 	{
+		std::string errorMessage = WindowsTCPSocket::getLastError();
 		closesocket(this->_clientSocket);
-		WSACleanup();
+		WindowsTCPSocket::cleanup();
 		throw std::runtime_error("listen failed");
 	}
 	return (0);
@@ -140,8 +171,9 @@ int 					WindowsTCPSocket::acceptClient(struct sockaddr_in &addr_in)
 	remoteFd = accept(this->_clientSocket, (sockaddr *)&addr_in, &in_len);
 	if (remoteFd == INVALID_SOCKET)
 	{
-		closesocket(remoteFd);
-		WSACleanup();
+		std::string errorMessage = WindowsTCPSocket::getLastError();
+		closesocket(this->_clientSocket);
+		WindowsTCPSocket::cleanup();
 		throw std::runtime_error("accept failed");
 	}
 	return (remoteFd);
@@ -173,8 +205,9 @@ int 				WindowsTCPSocket::sendData(std::string const &buff,
  	iSendResult = send(this->_clientSocket, buff.c_str(), len, 0);
 	if (iSendResult == SOCKET_ERROR)
 	{
+		std::string errorMessage = WindowsTCPSocket::getLastError();
 		closesocket(this->_clientSocket);
-		WSACleanup();
+		WindowsTCPSocket::cleanup();
 		throw std::runtime_error("send failed");
 	}
 	return (iSendResult);

@@ -23,6 +23,7 @@ BabelServer::~BabelServer()
 
 void					BabelServer::start()
 {
+	std::cout << "> Server started." << std::endl;
 	this->_server.start();
 	this->loop();
 	this->_server.stop();

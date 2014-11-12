@@ -55,16 +55,16 @@ void    BabelWindow::showEvent(QShowEvent *)
 
 void    BabelWindow::onConnectionSuccess()
 {
-    this->displayList();
     this->onUpdateListFriend();
-    this->ui->stackedWidget->setCurrentIndex(2);
+    this->ui->stackedWidget->setCurrentIndex(1);
     this->ui->dockWidget->show();
     this->ui->pushButton_call->show();
     this->ui->pushButton_HangUp->show();
     this->ui->label_seePseudo->show();
-    this->ui->pushButton_send->show();
+    /*this->ui->pushButton_send->show();
     this->ui->textEdit_message->show();
     this->ui->textEdit_seeMessage->show();
+    this->ui->pushButton_addToConf->show();*/
 }
 
 void    BabelWindow::hideContent()
@@ -76,32 +76,22 @@ void    BabelWindow::hideContent()
     this->ui->pushButton_call->hide();
     this->ui->pushButton_HangUp->hide();
     this->ui->label_seePseudo->hide();
-}
-
-void BabelWindow::displayList()
-{
-    std::list<Friend> myList;
-    myList = this->_data.getUser().getFriendList();
-    foreach (Friend toto, myList)
-    {
-        this->ui->listConnected->addItem(toto.getName());
-    }
-    this->_data.lockUser();
+    this->ui->pushButton_addToConf->hide();
 }
 
 void    BabelWindow::onUpdateListFriend()
 {
-    std::list<Friend>   myList;
-    this->ui->listConnected->clear();
-    myList = this->_data.getUser().getFriendList();
-    foreach (Friend toto, myList)
-    {
-        if (toto.getStatus() == 0)
-            this->ui->listConnected->addItem(toto.getName() + " -> (Disconnected)");
-        else if (toto.getStatus() == 1)
-            this->ui->listConnected->addItem(toto.getName() + " -> (Connected)");
-    }
     this->_data.lockUser();
+    this->ui->listConnected->clear();
+    std::list<Friend> const &myList = this->_data.getUser().getFriendList();
+    for (std::list<Friend>::const_iterator it = myList.begin(); it != myList.end(); ++it)
+    {
+        if (it->getStatus() == 0)
+            this->ui->listConnected->addItem((it->getName() + " -> (Disconnected)"));
+        else
+            this->ui->listConnected->addItem((it->getName() + " -> (Connected)"));
+    }
+    this->_data.unlockUser();
 }
 
 void    BabelWindow::onConnectionFailed()
@@ -159,17 +149,17 @@ void    BabelWindow::onCommandFailed(eErrorCode err)
     }
 }
 
-void BabelWindow::on_listConnected_itemClicked(QListWidgetItem *item)
+void    BabelWindow::on_listConnected_itemClicked(QListWidgetItem *item)
 {
     this->ui->label_seePseudo->setText(item->text());
 }
 
-void BabelWindow::on_pushButton_registration_clicked()
+void    BabelWindow::on_pushButton_registration_clicked()
 {
 	this->ui->stackedWidget->setCurrentIndex(2);
 }
 
-void BabelWindow::on_pushButton_register_clicked()
+void    BabelWindow::on_pushButton_register_clicked()
 {
     if (!this->ui->txt_signUpIp->text().isEmpty() &&
         this->ui->lineEdit_pseudoregister->text().toStdString() != "" &&
@@ -189,10 +179,9 @@ void BabelWindow::on_pushButton_register_clicked()
         this->ui->pushButton_register->setEnabled(false);
         this->ui->btn_swap_signin->setEnabled(false);
     }
-
 }
 
-void BabelWindow::on_pushButton_seconnecter_clicked()
+void    BabelWindow::on_pushButton_seconnecter_clicked()
 {
     if (this->ui->lineEdit_pseudo->text().toStdString() != "" &&
             this->ui->lineEdit_password->text().toStdString() != "" &&
@@ -214,7 +203,7 @@ void BabelWindow::on_pushButton_seconnecter_clicked()
 		this->ui->statusBar->showMessage("Error identifier, try again", 5000);
 }
 
-void BabelWindow::on_pushButton_send_clicked()
+void    BabelWindow::on_pushButton_send_clicked()
 {
 	if (this->ui->textEdit_message->toPlainText().toStdString() != "")
 	{
@@ -231,42 +220,42 @@ void BabelWindow::on_pushButton_send_clicked()
 	this->ui->textEdit_seeMessage->setTextCursor(c);
 }
 
-void BabelWindow::on_btn_swap_signin_clicked()
+void    BabelWindow::on_btn_swap_signin_clicked()
 {
     this->ui->stackedWidget->setCurrentIndex(0);
 }
 
-void BabelWindow::on_pushButton_HangUp_clicked()
+void    BabelWindow::on_pushButton_HangUp_clicked()
 {
     //emit this->onHangUp();
 }
 
-void BabelWindow::on_pushButton_call_clicked()
+void    BabelWindow::on_pushButton_call_clicked()
 {
 
     onCall();
 }
 
-void BabelWindow::on_pushButton_manageFriend_clicked()
+void    BabelWindow::on_pushButton_manageFriend_clicked()
 {
-    this->ui->stackedWidget->setCurrentIndex(4);
+    this->ui->stackedWidget->setCurrentIndex(3);
 }
 
-void BabelWindow::on_pushButton_addThisFriend_clicked()
+void    BabelWindow::on_pushButton_addThisFriend_clicked()
 {
     //this->AddFriendRequest(this->ui->lineEdit_addThisFriend->text())
     //onUpdateListFriend();
 }
 
-void BabelWindow::on_pushButton_removeThisFriend_clicked()
+void    BabelWindow::on_pushButton_removeThisFriend_clicked()
 {
     //this->AddFriendRequest(this->ui->lineEdit_addThisFriend->text())
     //onUpdateListFriend();
 }
 
-void BabelWindow::on_pushButton_back_clicked()
+void    BabelWindow::on_pushButton_back_clicked()
 {
-    this->ui->stackedWidget->setCurrentIndex(2);
+    this->ui->stackedWidget->setCurrentIndex(1);
 }
 
 void    BabelWindow::onCallRequest(const QString &name, std::list<QString>listConf)
@@ -299,12 +288,12 @@ void    BabelWindow::onCallDropped(QString name)
     msgBox.exec();
 }
 
-void BabelWindow::on_pushButton_clear_clicked()
-{
-    this->ui->textEdit_listConf->clear();
-}
-
-void BabelWindow::on_pushButton_callList_clicked()
+void    BabelWindow::on_pushButton_callList_clicked()
 {
     onFriendRequest(this->ui->lineEdit_addThisFriend->text());
+}
+
+void BabelWindow::on_pushButton_addToConf_clicked()
+{
+
 }

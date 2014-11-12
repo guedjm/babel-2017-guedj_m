@@ -230,7 +230,7 @@ void        ClientWorker::receiveFriendList(std::istringstream &buff, int)
          it != friendList.end(); ++it)
             usr.addFriend(it->first.c_str(), (eFriendStatus)it->second);
     this->_data.unlockUser();
-    emit this->onConnectionSuccess();
+    emit this->connectedToServer();
 }
 
 void        ClientWorker::receiveFriendStatusUpdate(std::istringstream &buff, int)

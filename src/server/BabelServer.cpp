@@ -1,4 +1,4 @@
-
+#include <iostream>
 #include "BabelServer.h"
 #include "FileSerializer.h"
 #include "StandardInput.h"
@@ -78,30 +78,38 @@ void					BabelServer::process(mySelect& bs)
 	for (std::list<IObservable*>::const_iterator it = readReady.begin(); it != readReady.end(); ++it)
 	{
 		if ((*it)->getReadFd() == 0)
+		{
 			this->_running = false;
+			std::cout << "> Input detected. Stopping the server." << std::endl;
+		}
 		else if (*it == &this->_server)
 		{
-			this->_strangers.push_front(std::pair<ITCPRemoteClient*, unsigned long long int>(this->_server.acceptClient(), AUTH_TIMEOUT));
+			ITCPRemoteClient* newClient = this->_server.acceptClient();
+			this->_strangers.push_front(std::pair<ITCPRemoteClient*, unsigned long long int>(newClient, AUTH_TIMEOUT));
+			std::cout << "Guest connection: " + newClient->getIp() << std::endl;
 		}
 	}
 }
 
-void					BabelServer::updateData()
+void					BabelServer::updateData(mySelect& bs)
 {
 	std::list<std::pair<ITCPRemoteClient*, unsigned long long int>> toRemove;
 	for (std::list<std::pair<ITCPRemoteClient*, unsigned long long int>>::iterator it = this->_strangers.begin(); it != this->_strangers.end(); ++it)
 	{
-		if (it->second == 0)
+		if (it->first->mustBeClosed() || it->second == 0)
 		{
 			toRemove.push_front(*it);
 		}
 	}
 	for (std::list<std::pair<ITCPRemoteClient*, unsigned long long int>>::iterator it = toRemove.begin(); it != toRemove.end(); ++it)
 	{
+		std::cout << "Guest authentification timeout: " + it->first->getIp() << std::endl;
+		bs.removeReadFd(it->first);
 		delete it->first;
 		this->_strangers.remove(*it);
 	}
 }
+
 
 void					BabelServer::loop()
 {
@@ -115,6 +123,6 @@ void					BabelServer::loop()
 		babelSelect.start();
 		this->updateStrangersTimeout(babelSelect);
 		this->process(babelSelect);
-		this->updateData();
+		this->updateData(babelSelect);
 	}
 }

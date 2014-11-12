@@ -24,7 +24,7 @@ private:
 	void							setSelectTimeout(mySelect&);
 	void							updateStrangersTimeout(mySelect&);
 	void							process(mySelect&);
-	void							updateData();
+	void							updateData(mySelect&);
 
 private:
 	Database						_database;

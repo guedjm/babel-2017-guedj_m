@@ -19,7 +19,6 @@ WindowsTCPSocket::WindowsTCPSocket(struct sockaddr_in &addr, int fd)
 
 WindowsTCPSocket::~WindowsTCPSocket()
 {
-	WSACleanup();
 }
 
 int			WindowsTCPSocket::init()

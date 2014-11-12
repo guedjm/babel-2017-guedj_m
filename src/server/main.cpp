@@ -20,5 +20,6 @@ int	main(int ac, char *argv[])
 	{
 		std::cerr << e.what() << std::endl;
 	}
+	std::cout << "> Server properly exited." << std::endl;
 	system("PAUSE");
 }

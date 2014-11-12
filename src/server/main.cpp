@@ -15,11 +15,12 @@ int	main(int ac, char *argv[])
 		}
 		BabelServer babel(port);
 		babel.start();
+		std::cout << "> Server properly exited." << std::endl;
 	}
 	catch (std::exception& e)
 	{
 		std::cerr << e.what() << std::endl;
+		std::cout << "> Server exited." << std::endl;
 	}
-	std::cout << "> Server properly exited." << std::endl;
 	system("PAUSE");
 }

@@ -105,6 +105,8 @@ void					BabelServer::updateData(mySelect& bs)
 	for (std::list<std::pair<ITCPRemoteClient*, unsigned long long int>>::iterator it = toRemove.begin(); it != toRemove.end(); ++it)
 	{
 		std::cout << "Guest authentification timeout: " + it->first->getIp() << std::endl;
+		it->first->prepareMsg("You are getting kicked.", 10);
+		it->first->send();
 		bs.removeReadFd(it->first);
 		delete it->first;
 		this->_strangers.remove(*it);

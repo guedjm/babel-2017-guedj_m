@@ -45,7 +45,8 @@ std::string	WindowsTCPSocket::getLastError()
 		(LPTSTR)&lpMsgBuf,
 		0, NULL);
 
-	std::string r((LPTSTR)&lpMsgBuf);
+	char* tmp = (char*)lpMsgBuf;
+	std::string r(tmp);
 	LocalFree(lpMsgBuf);
 	return r;
 }
@@ -158,7 +159,7 @@ int 					WindowsTCPSocket::listenSock(int backlog)
 		std::string errorMessage = WindowsTCPSocket::getLastError();
 		closesocket(this->_clientSocket);
 		WindowsTCPSocket::cleanup();
-		throw std::runtime_error("listen failed");
+		throw std::runtime_error("listen failed: " + errorMessage);
 	}
 	return (0);
 }
@@ -174,7 +175,7 @@ int 					WindowsTCPSocket::acceptClient(struct sockaddr_in &addr_in)
 		std::string errorMessage = WindowsTCPSocket::getLastError();
 		closesocket(this->_clientSocket);
 		WindowsTCPSocket::cleanup();
-		throw std::runtime_error("accept failed");
+		throw std::runtime_error("accept failed: " + errorMessage);
 	}
 	return (remoteFd);
 }
@@ -208,7 +209,7 @@ int 				WindowsTCPSocket::sendData(std::string const &buff,
 		std::string errorMessage = WindowsTCPSocket::getLastError();
 		closesocket(this->_clientSocket);
 		WindowsTCPSocket::cleanup();
-		throw std::runtime_error("send failed");
+		throw std::runtime_error("send failed: " + errorMessage);
 	}
 	return (iSendResult);
 }

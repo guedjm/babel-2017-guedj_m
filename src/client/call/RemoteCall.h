@@ -21,8 +21,10 @@ public:
     virtual QString const   &getUsernameById(int) const;
 
     void            start(QString const &, unsigned short);
+    void            setMyId(unsigned int);
 
-    void            onReceiveWelcome(QMap<int, QString> const &, unsigned int);
+    void            addCallee(QString const &, unsigned int);
+    void            removeCallee(unsigned int);
     void            onReceiveUDPReady(unsigned short);
 
 signals:

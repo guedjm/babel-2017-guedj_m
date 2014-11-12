@@ -43,6 +43,59 @@ void        ClientWorker::connectToServer()
     this->_serverSocket.connectToHost(ip, port);
 }
 
+void        ClientWorker::onReadSomething()
+{
+    int                     totalSize;
+    int                     currentSize;
+    std::istringstream      stream;
+    struct TCPPacketHeader  packetHeader;
+    QTcpSocket              *client = (QTcpSocket*)(sender());
+    QMap<eCommandId, void (ClientWorker::*)(std::istringstream &, int)> _funcs;
+
+    _funcs[RequestAuth] = &ClientWorker::receiveAuthRequest;
+    _funcs[SendFriendsList] = &ClientWorker::receiveFriendList;
+    _funcs[FriendStatusUpdate] = &ClientWorker::receiveFriendStatusUpdate;
+    _funcs[FriendRequest] = &ClientWorker::receiveFriendRequest;
+    _funcs[AddToCall] = &ClientWorker::receiveCallRequest;
+    _funcs[CallDropped] = &ClientWorker::receiveCallDropped;
+    _funcs[Host] = &ClientWorker::receiveHostRequest;
+    _funcs[ConnectToPeer] = &ClientWorker::receiveConnectToPeer;
+    _funcs[OK] = &ClientWorker::receiveOk;
+    _funcs[KO] = &ClientWorker::receiveKO;
+    _funcs[Welcome] = &ClientWorker::receiveWelcome;
+    _funcs[ParticipantStatusUpdate] = &ClientWorker::receiveParticipantStatusUpdate;
+    _funcs[UDPReady] = &ClientWorker::receiveUdpReady;
+    _funcs[SendText] = &ClientWorker::receiveSendText;
+
+    currentSize = 0;
+    totalSize = client->read(this->_buff, BUFFER_SIZE);
+    stream.str(std::string(this->_buff, totalSize));
+    while ((totalSize - currentSize) >= sizeof(packetHeader) && currentSize < totalSize)
+    {
+        if (PacketHelper::readTcpHeader(stream, packetHeader)
+                && (unsigned)(totalSize - currentSize) >= (sizeof(packetHeader) + packetHeader.payloadSize))
+            (this->*_funcs[(eCommandId)packetHeader.commandId])(stream, packetHeader.payloadSize);
+        currentSize += (sizeof(packetHeader) + packetHeader.payloadSize);
+    }
+}
+
+void        ClientWorker::onConnectionSuccess()
+{
+    std::cout << "Connected" << std::endl;
+}
+
+void        ClientWorker::onDisconnected()
+{
+    std::cout << "Disconnected" << std::endl;
+}
+
+void        ClientWorker::onSocketError(QAbstractSocket::SocketError err)
+{
+    if (err == 2 || err == 5)
+        emit this->connectionFailed();
+}
+
+
 
 /*--------------------------- REQUESTS -------------------------*/
 
@@ -151,56 +204,6 @@ void		ClientWorker::answerCallRequest(QString const &dest, bool answer)
 }
 
 /*--------------------------------------------------------------*/
-
-
-
-void        ClientWorker::onReadSomething()
-{
-    int                     totalSize;
-    int                     currentSize;
-    std::istringstream      stream;
-    struct TCPPacketHeader  packetHeader;
-    QTcpSocket              *client = (QTcpSocket*)(sender());
-    QMap<eCommandId, void (ClientWorker::*)(std::istringstream &, int)> _funcs;
-
-    _funcs[RequestAuth] = &ClientWorker::receiveAuthRequest;
-    _funcs[SendFriendsList] = &ClientWorker::receiveFriendList;
-    _funcs[FriendStatusUpdate] = &ClientWorker::receiveFriendStatusUpdate;
-    _funcs[FriendRequest] = &ClientWorker::receiveFriendRequest;
-    _funcs[AddToCall] = &ClientWorker::receiveCallRequest;
-    _funcs[CallDropped] = &ClientWorker::receiveCallDropped;
-    _funcs[Host] = &ClientWorker::receiveHostRequest;
-    _funcs[ConnectToPeer] = &ClientWorker::receiveConnectToPeer;
-    _funcs[OK] = &ClientWorker::receiveOk;
-    _funcs[KO] = &ClientWorker::receiveKO;
-
-    currentSize = 0;
-    totalSize = client->read(this->_buff, BUFFER_SIZE);
-    stream.str(std::string(this->_buff, totalSize));
-    while ((totalSize - currentSize) > sizeof(packetHeader) && currentSize < totalSize)
-    {
-        if (PacketHelper::readTcpHeader(stream, packetHeader)
-                && (totalSize - currentSize) > (sizeof(packetHeader) + packetHeader.payloadSize))
-            (this->*_funcs[(eCommandId)packetHeader.commandId])(stream, packetHeader.payloadSize);
-        currentSize += (sizeof(packetHeader) + packetHeader.payloadSize);
-    }
-}
-
-void        ClientWorker::onConnectionSuccess()
-{
-    std::cout << "Connected" << std::endl;
-}
-
-void        ClientWorker::onDisconnected()
-{
-    std::cout << "Disconnected" << std::endl;
-}
-
-void        ClientWorker::onSocketError(QAbstractSocket::SocketError err)
-{
-    if (err == 2 || err == 5)
-        emit this->connectionFailed();
-}
 
 
 /*-------------------------------- RECEIVE -------------------------*/
@@ -314,6 +317,7 @@ void		ClientWorker::receiveCallDropped(std::istringstream &buff, int)
 void        ClientWorker::receiveOk(std::istringstream &buff, int)
 {
     int cmdId = Serializer::deserialize<int>(buff);
+    std::cout << "Command " << cmdId << " succed" << std::endl;
 }
 
 void        ClientWorker::receiveKO(std::istringstream &buff, int)
@@ -322,9 +326,66 @@ void        ClientWorker::receiveKO(std::istringstream &buff, int)
     emit this->commandFailed((eErrorCode)errorCode);
 }
 
-void        ClientWorker::onConnectedToRemoteHost()
+void        ClientWorker::receiveWelcome(std::istringstream &buff, int)
 {
-    //TODO
+    RemoteCall  *call;
+    std::list<std::pair<std::string, char>> names = Serializer::deserialize<std::list<std::pair<std::string, char>>>(buff);
+    int id = Serializer::deserialize<int>(buff);
+
+    if (this->_call != 0)
+    {
+        call = (RemoteCall*)this->_call;
+        for (std::list<std::pair<std::string, char>>::iterator it = names.begin();
+             it != names.end(); ++it)
+        {
+            call->addCallee(it->first.c_str(), it->second);
+            emit this->addInCall(it->first.c_str());
+        }
+        call->setMyId(id);
+    }
+}
+
+void        ClientWorker::receiveParticipantStatusUpdate(std::istringstream &buff, int)
+{
+    RemoteCall  *call;
+    char        status = Serializer::deserialize<char>(buff);
+    int         id = Serializer::deserialize<char>(buff);
+    std::string username = Serializer::deserialize<std::string>(buff);
+
+    if (status == Join && this->_call != 0)
+    {
+        call = (RemoteCall*)this->_call;
+        call->addCallee(username.c_str(), id);
+        emit this->addInCall(username.c_str());
+    }
+    else if (this->_call != 0)
+    {
+        call = (RemoteCall*)this->_call;
+        call->removeCallee(id);
+        emit this->leftCall(username.c_str());
+    }
+}
+
+void        ClientWorker::receiveUdpReady(std::istringstream &buff, int)
+{
+    int     port = Serializer::deserialize<int>(buff);
+
+    if (this->_call != 0 && !this->_call->isHost())
+        ((RemoteCall*)(this->_call))->onReceiveUDPReady(port);
+}
+
+void        ClientWorker::receiveSendText(std::istringstream &buff, int)
+{
+    int         id = Serializer::deserialize<int>(buff);
+    std::string msg = Serializer::deserialize<std::string>(buff);
+
+    if (this->_call != 0)
+    {
+        if (this->_call->isHost())
+            ((HostedCall*)(this->_call))->onReceiveSendTextMsg(id, msg.c_str());
+        QString usr = this->_call->getUsernameById(id);
+        emit this->sendText(usr, msg.c_str());
+    }
 }
 
 /*-------------------------------------------------------------------*/

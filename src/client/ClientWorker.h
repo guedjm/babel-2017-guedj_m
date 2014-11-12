@@ -32,6 +32,10 @@ signals:
     void    callRequest(QString const &, std::list<std::string> const &);
     void    callDropped(QString const &);
 
+    void    addInCall(QString const &);
+    void    leftCall(QString const &);
+    void    sendText(QString const &, QString const &);
+
 public slots:
     void    onReadSomething();
 
@@ -48,8 +52,6 @@ public slots:
 
     void    addToCallRequest(QString const &);
 
-    void    onConnectedToRemoteHost();
-
 private:
     void     connectToServer();
 
@@ -63,7 +65,12 @@ private:
     void    receiveConnectToPeer(std::istringstream&, int);
     void    receiveOk(std::istringstream &, int);
     void    receiveKO(std::istringstream &, int);
-  
+
+    void    receiveWelcome(std::istringstream &, int);
+    void    receiveParticipantStatusUpdate(std::istringstream &, int);
+    void    receiveUdpReady(std::istringstream &, int);
+    void    receiveSendText(std::istringstream &, int);
+
 
     char                _buff[BUFFER_SIZE];
 	ClientData			&_data;

@@ -44,10 +44,19 @@ void            RemoteCall::start(const QString &ip, unsigned short port)
     this->_tcpClient.connectToHost(ip, port);
 }
 
-void            RemoteCall::onReceiveWelcome(const QMap<int, QString> &callees, unsigned int id)
+void            RemoteCall::setMyId(unsigned int id)
 {
     this->_myId = id;
-    this->_connectedUsers = callees;
+}
+
+void            RemoteCall::addCallee(const QString &name, unsigned int id)
+{
+    this->_connectedUsers[id] = name;
+}
+
+void            RemoteCall::removeCallee(unsigned int id)
+{
+    this->_connectedUsers.remove(id);
 }
 
 void            RemoteCall::onReceiveUDPReady(unsigned short port)

@@ -3,10 +3,10 @@
 #include <QTcpSocket>
 #include <QThread.h>
 #include <QString>
+#include "ICall.h"
 #include "ClientData.h"
 #include "eErrorCode.h"
 #include "constant.h"
-#include "Call.h"
 #include "eCommandId.h"
 
 class MainWindow;
@@ -53,9 +53,6 @@ public slots:
 private:
     void     connectToServer();
 
-    bool    isHeaderValid(std::istringstream &, struct TCPPacketHeader &);
-    void    writeHeader(std::string &, eCommandId);
-
     void    receiveAuthRequest(std::istringstream &, int);
     void    receiveFriendList(std::istringstream &, int);
     void    receiveFriendStatusUpdate(std::istringstream &, int);
@@ -71,5 +68,5 @@ private:
     char                _buff[BUFFER_SIZE];
 	ClientData			&_data;
     QTcpSocket          _serverSocket;
-    Call                _call;
+    ICall               *_call;
 };

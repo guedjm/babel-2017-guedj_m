@@ -22,7 +22,10 @@ SOURCES += main.cpp\
     data/User.cpp \
     ../abstraction/QTMutex.cpp \
     Call.cpp \
-    data/Callee.cpp
+    data/Callee.cpp \
+    call/HostedCall.cpp \
+    call/RemoteCall.cpp \
+    ../common/PacketHelper.cpp
 
 HEADERS  += \
     ClientWorker.h \
@@ -43,24 +46,30 @@ HEADERS  += \
     ../common/Serializer.hpp \
     data/eAuthType.h \
     ../common/eFriendRequestType.h \
-    ../common/eFriendStatus.h
+    ../common/eFriendStatus.h \
+    call/ICall.h \
+    call/HostedCall.h \
+    ../common/eCalleeStatus.h \
+    call/RemoteCall.h \
+    ../common/PacketHelper.h
 
-INCLUDEPATH += ../common \
+INCLUDEPATH += . \
+               ../common \
                ../abstraction \
-               ./data
-
+               ./data \
+               ./call
 DEFINES += "_CLIENT"
 
 FORMS += \
     Mainwindow.ui \
     babelwindow.ui
 
-LIBS += ../../../build/Win32/Debug/portaudio.lib \
-        ../../../build/Win32/Debug/celt.lib \
-        ../../../build/Win32/Debug/opus.lib \
-        ../../../build/Win32/Debug/silk_common.lib \
-        ../../../build/Win32/Debug/silk_fixed.lib \
-        ../../../build/Win32/Debug/silk_float.lib \
+LIBS += ../../build/Win32/Debug/portaudio.lib \
+        ../../build/Win32/Debug/celt.lib \
+        ../../build/Win32/Debug/opus.lib \
+        ../../build/Win32/Debug/silk_common.lib \
+        ../../build/Win32/Debug/silk_fixed.lib \
+        ../../build/Win32/Debug/silk_float.lib \
         winspool.lib \
         shlwapi.lib \
         rpcrt4.lib \

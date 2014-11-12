@@ -17,6 +17,7 @@ WindowsTCPRemoteClient::WindowsTCPRemoteClient(struct sockaddr_in &addr, int fd)
 
 WindowsTCPRemoteClient::~WindowsTCPRemoteClient()
 {
+	std::cout << "TCPRemoteClient destructor. Calling sock->closeSock()." << std::endl;
 	this->_sock->closeSock();
 	delete this->_sock;
 }

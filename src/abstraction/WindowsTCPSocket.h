@@ -33,13 +33,18 @@ public:
 	virtual int		receive(std::string &);
 	virtual int		sendData(std::string const &, int);
 
+	static void		initialize();
+	static void		cleanup();
+
 private:
 	int 				_fd;
 	SOCKET				_clientSocket;
-	WSADATA				_wsaData;
 	SOCKADDR_IN		 	_addr;
 	struct addrinfo		*_result;
 	struct addrinfo		_hints;
+
+	static bool			_initialized;
+
 };
 
 #endif

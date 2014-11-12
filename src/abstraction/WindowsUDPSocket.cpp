@@ -3,10 +3,12 @@
 #include <string.h>
 #include <iostream>
 #include <stdio.h>
+#include "WindowsTCPSocket.h"
 #include "WindowsUDPSocket.h"
 
 WindowsUDPSocket::WindowsUDPSocket()
 {
+	WindowsTCPSocket::initialize();
 	memset(&this->_addr, 0, sizeof(this->_addr));
 }
 
@@ -16,11 +18,6 @@ WindowsUDPSocket::~WindowsUDPSocket()
 
 int		WindowsUDPSocket::init()
 {
-	if (WSAStartup(MAKEWORD(2, 2), &this->_wsaData) != 0)
-	{
-		printf("Initialization failed with error code : %d\n", WSAGetLastError());
-		return (-1);
-	}
 	this->_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if (this->_socket == INVALID_SOCKET)
 	{

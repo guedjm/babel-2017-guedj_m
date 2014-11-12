@@ -3,8 +3,11 @@
 #include "WindowsTCPSocket.h"
 #include "constant.h"
 
+bool WindowsTCPSocket::_initialized = false;
+
 WindowsTCPSocket::WindowsTCPSocket()
 {
+	WindowsTCPSocket::initialize();
 	memset(&this->_addr, 0, sizeof(this->_addr));
 	this->_result = NULL;
 	this->_clientSocket = INVALID_SOCKET;
@@ -21,21 +24,40 @@ WindowsTCPSocket::~WindowsTCPSocket()
 {
 }
 
+
+void		WindowsTCPSocket::initialize()
+{
+	if (WindowsTCPSocket::_initialized == false)
+	{
+		WindowsTCPSocket::_initialized = true;
+		WSADATA wsaData;
+		int ret = WSAStartup(MAKEWORD(2, 2), &wsaData);
+		if (ret != 0)
+			throw std::runtime_error("WSAStartup failed");
+	}
+}
+
+void		WindowsTCPSocket::cleanup()
+{
+	if (WindowsTCPSocket::_initialized == true)
+	{
+		WindowsTCPSocket::_initialized = false;
+		int ret = WSACleanup();
+		if (ret != 0)
+			throw std::runtime_error("WSACleanup failed");
+	}
+}
+
+
 int			WindowsTCPSocket::init()
 {
-	int 	ret;
-
-	ret = WSAStartup(MAKEWORD(2, 2), &this->_wsaData);
-	if (ret != 0)
-		throw std::runtime_error("WSAStartup failed");
-
 	ZeroMemory(&this->_hints, sizeof(this->_hints));
 	this->_hints.ai_family = AF_INET;
 	this->_hints.ai_socktype = SOCK_STREAM;
 	this->_hints.ai_protocol = IPPROTO_TCP;
 	this->_hints.ai_flags = AI_PASSIVE;
 
-	ret = getaddrinfo(NULL, DEFAULT_PORT, &this->_hints, &this->_result);
+	int ret = getaddrinfo(NULL, DEFAULT_PORT, &this->_hints, &this->_result);
 	if (ret != 0) {
 		WSACleanup();
 		throw std::runtime_error("getaddrinfo failed");
@@ -55,7 +77,6 @@ int			WindowsTCPSocket::init()
 int 		WindowsTCPSocket::closeSock()
 {
 	closesocket(this->_clientSocket);
-	WSACleanup();
 	return (1);
 }
 

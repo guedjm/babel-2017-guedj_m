@@ -3,10 +3,10 @@
 #include <QTcpSocket>
 #include <QThread.h>
 #include <QString>
+#include "ICall.h"
 #include "ClientData.h"
 #include "eErrorCode.h"
 #include "constant.h"
-#include "Call.h"
 #include "eCommandId.h"
 
 class MainWindow;
@@ -32,6 +32,10 @@ signals:
     void    callRequest(QString const &, std::list<std::string> const &);
     void    callDropped(QString const &);
 
+    void    addInCall(QString const &);
+    void    leftCall(QString const &);
+    void    sendText(QString const &, QString const &);
+
 public slots:
     void    onReadSomething();
 
@@ -48,13 +52,8 @@ public slots:
 
     void    addToCallRequest(QString const &);
 
-    void    onConnectedToRemoteHost();
-
 private:
     void     connectToServer();
-
-    bool    isHeaderValid(std::istringstream &, struct TCPPacketHeader &);
-    void    writeHeader(std::string &, eCommandId);
 
     void    receiveAuthRequest(std::istringstream &, int);
     void    receiveFriendList(std::istringstream &, int);
@@ -66,10 +65,15 @@ private:
     void    receiveConnectToPeer(std::istringstream&, int);
     void    receiveOk(std::istringstream &, int);
     void    receiveKO(std::istringstream &, int);
-  
+
+    void    receiveWelcome(std::istringstream &, int);
+    void    receiveParticipantStatusUpdate(std::istringstream &, int);
+    void    receiveUdpReady(std::istringstream &, int);
+    void    receiveSendText(std::istringstream &, int);
+
 
     char                _buff[BUFFER_SIZE];
 	ClientData			&_data;
     QTcpSocket          _serverSocket;
-    Call                _call;
+    ICall               *_call;
 };

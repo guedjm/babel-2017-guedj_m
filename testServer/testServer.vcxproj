@@ -45,6 +45,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)\src\common;$(SolutionDir)\src\abstraction;$(SolutionDir)\src\server</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -65,20 +66,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\abstraction\WindowsSelect.cpp" />
     <ClCompile Include="..\src\abstraction\WindowsTCPClient.cpp" />
     <ClCompile Include="..\src\abstraction\WindowsTCPRemoteClient.cpp" />
     <ClCompile Include="..\src\abstraction\WindowsTCPServer.cpp" />
     <ClCompile Include="..\src\abstraction\WindowsTCPSocket.cpp" />
     <ClCompile Include="..\src\common\FileSerializer.cpp" />
+    <ClCompile Include="..\src\common\PacketHelper.cpp" />
+    <ClCompile Include="..\src\common\StandardInput.cpp" />
     <ClCompile Include="..\src\server\BabelServer.cpp" />
     <ClCompile Include="..\src\server\Database.cpp" />
     <ClCompile Include="..\src\server\userData.cpp" />
+    <ClCompile Include="basicServer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="testSerializer.cpp" />
     <ClCompile Include="testTCPServer.cpp" />
     <ClCompile Include="testUserData.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\abstraction\ITCPServer.h" />
+    <ClInclude Include="..\src\abstraction\ITCPSocket.h" />
+    <ClInclude Include="..\src\abstraction\myTCPServer.h" />
+    <ClInclude Include="..\src\abstraction\WindowsTCPRemoteClient.h" />
+    <ClInclude Include="..\src\abstraction\WindowsTCPServer.h" />
+    <ClInclude Include="..\src\common\eCommandId.h" />
+    <ClInclude Include="..\src\common\PacketHelper.h" />
     <ClInclude Include="..\src\common\Serializer.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

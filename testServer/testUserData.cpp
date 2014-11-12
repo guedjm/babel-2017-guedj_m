@@ -15,10 +15,10 @@ void	testServerDatabase()
 		UserData	*user = new UserData("toto", "tata");
 
 		db.addUser(user->getName(), user->getPassword());
-		server.setDb(db);
+		//server.setDb(db);
 	}
 	BabelServer server;
-	std::cout << server.getDb().getUsers().size() << std::endl;
+	//std::cout << server.getDb().getUsers().size() << std::endl;
 	system("PAUSE");
 }
 

@@ -26,11 +26,13 @@ void		sampleServerTest()
 
 void		basicTest()
 {
+	int				size;
+	std::string		dest;
 	std::string ip = "127.0.0.1";
 	unsigned short port = 4242;
-	ITCPClient  *client;
-	ITCPClient	*client2;
-	ITCPServer	*server;
+	ITCPClient			*client;
+	ITCPRemoteClient	*rClient;
+	ITCPServer			*server;
 
 	server = new WindowsTCPServer();
 	server->start(ip, port, 10);
@@ -40,43 +42,46 @@ void		basicTest()
 	client = new WindowsTCPClient();
 	Sleep(1);
 	std::cout << "Connecting to server ... " << std::endl;
-	client->connectTo(ip, port);
+	if (client->connectTo(ip, port) == -1)
+		throw std::runtime_error("Cannot connect to server");
 	Sleep(1);
-	std::cout << "CLIENT : Sending HELLO ..." << std::endl;
+
+	rClient = server->acceptClient();
+	std::cout << "Connected to server ..." << std::endl,
 	client->prepareMsg("HELLO", 6);
-	client->send();
+	size = client->send();
+	std::cout << "CLIENT : Send HELLO ... ( size = " << size << ")" << std::endl;
 	Sleep(1);
-	std::cout << "CLIENT : SENDING HOW ARE U ? ..." << std::endl;
-	client->prepareMsg("HOW ARE U ?", 12);
-	client->send();
+	size = (*rClient >> dest);
+	std::cout << "SERVER : Receive : " << dest << " ( size = " << size << ")" << std::endl;
 	Sleep(1);
-	std::cout << "CLIENT : SENDING LOL ..." << std::endl;
-	client->prepareMsg("LOL", 4);
-	client->send();
+
+	rClient->prepareMsg("HOW ARE U ?", 12);
+	size = rClient->send();
+	std::cout << "SERVER : Send HOW ARE U ? ... ( size = " << size << ")" << std::endl;
 	Sleep(1);
-	std::cout << "Creating new client ...." << std::endl;
-	client2 = new WindowsTCPClient();
+	
+	dest = "";
+	size = (*client >> dest);
+	std::cout << "CLIENT : Receive :" << dest << " (size = " << size << ")" << std::endl;
 	Sleep(1);
-	std::cout << "Connecting to server ... " << std::endl;
-	client2->connectTo(ip, port);
-	Sleep(1);
-	std::cout << "CLIENT 2 : SENDING CONNECTION OK ..." << std::endl;
-	client2->prepareMsg("CONNECTION OK", 14);
-	client2->send();
-	Sleep(1);
-	std::cout << "CLIENT : SENDING STOP ... " << std::endl;
-	client->prepareMsg("STOP", 5);
-	client->send();
+
+	std::cout << "Disconnecting client ... " << std::endl;
 	client->closeSock();
-	std::cout << "CLIENT2 : SENDING STOP ... " << std::endl;
-	client2->prepareMsg("STOP", 5);
-	client2->send();
-	client2->closeSock();
+	delete client;
+
+	dest = "";
+	size = (*rClient >> dest);
+	std::cout << "Server : Receive :" << dest << " (size = " << size << ")" << std::endl;
+	Sleep(1);
+	delete rClient;
+	server->stop();
+	delete server;
 
 	system("PAUSE");
 }
 
 int main()
 {
-	sampleServerTest();
+	basicTest();
 }

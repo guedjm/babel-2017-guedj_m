@@ -40,7 +40,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>$(SolutionDir)\src\abstraction;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\src\abstraction;$(SolutionDir)\src\common;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)\build\$(Platform)\$(Configuration)\</OutDir>

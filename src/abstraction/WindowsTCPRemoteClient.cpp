@@ -9,7 +9,7 @@ WindowsTCPRemoteClient::WindowsTCPRemoteClient(struct sockaddr_in &addr, int fd)
 {
 	this->_closing = false;
 	this->_sock = new WindowsTCPSocket(addr, fd);
-	if (this->_sock == 0 || this->_sock->init() == -1)
+	if (this->_sock == 0)
 		throw std::exception();
 	this->_ip = inet_ntoa(addr.sin_addr);
 	this->_toSendLen = 0;

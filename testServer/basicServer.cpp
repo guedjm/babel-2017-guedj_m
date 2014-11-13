@@ -54,6 +54,9 @@ int				runBasicServer()
 	packet = "";
 	PacketHelper::writeTcpHeader(packet, SendFriendsList); // Création d'un packet vide (avec commande id = SendFriendList)
 	std::list<std::pair<std::string, char>> listFriend;
+	listFriend.push_back(std::pair<std::string, char>("M4x0w", 1));
+	listFriend.push_back(std::pair<std::string, char>("Darkyuki", 0));
+	listFriend.push_back(std::pair<std::string, char>("toLLL", 2));
 	packet = packet.append(Serializer::serialize<std::list<std::pair<std::string, char>>>(listFriend));
 	PacketHelper::writeTcpHeaderSize(packet);
 	client->prepareMsg(packet, packet.length()); 

@@ -71,8 +71,6 @@ private slots:
 
     void on_pushButton_back_clicked();
 
-    void on_pushButton_callList_clicked();
-
     void on_pushButton_addToConf_clicked();
 
 signals:

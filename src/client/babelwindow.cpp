@@ -34,21 +34,11 @@ void    BabelWindow::showEvent(QShowEvent *)
     this->_worker->moveToThread(&this->_workerThread);
     connect(this, SIGNAL(onSignInRequest()), this->_worker, SLOT(onSignInRequest()));
     connect(this, SIGNAL(onSignUpRequest()), this->_worker, SLOT(onSignUpRequest()));
-    connect(this, SIGNAL(onCall(QString const &, std::list<std::string> const &)), this->_worker, SLOT(onCall(QString const &, std::list<std::string> const &)));
-    connect(this, SIGNAL(onHangUp()), this->_worker, SLOT(onHangUp()));
-    connect(this, SIGNAL(onSend()), this->_worker, SLOT(onSend()));
-    connect(this, SIGNAL(onAddFriend()), this->_worker, SLOT(onAddFriend()));
-    connect(this, SIGNAL(onRemoveFriend()), this->_worker, SLOT(onRemoveFriend()));
-    connect(this, SIGNAL(onAcceptRequestCall()), this->_worker, SLOT(onAcceptRequestCall()));
-    connect(this, SIGNAL(onDeclineRequestCall()), this->_worker, SLOT(onDeclineRequestCall()));
-    connect(this, SIGNAL(answerRequestCall(QString, bool)), this->_worker, SLOT(answerRequestCall(QString, bool)));
 
     connect(this->_worker, SIGNAL(connectedToServer()), this, SLOT(onConnectionSuccess()));
     connect(this->_worker, SIGNAL(friendStatusUpdate()), this, SLOT(onUpdateListFriend()));
     connect(this->_worker, SIGNAL(connectionFailed()), this, SLOT(onConnectionFailed()));
     connect(this->_worker, SIGNAL(friendRequest(QString)), this, SLOT(onFriendRequest(QString)));
-    connect(this->_worker, SIGNAL(friendRequestSended()), this, SLOT(onfriendRequestSended()));
-    connect(this->_worker, SIGNAL(callRequest(QString const &, std::list<QString>)), this, SLOT(onCall(QString const &, std::list<QString>)));
     connect(this->_worker, SIGNAL(callDropped(QString)), this, SLOT(onCallDropped(QString)));
     this->_workerThread.start();
 }
@@ -286,11 +276,6 @@ void    BabelWindow::onCallDropped(QString name)
     QMessageBox msgBox;
     msgBox.setText("La personne ne veut pas être en relation avec vous.");
     msgBox.exec();
-}
-
-void    BabelWindow::on_pushButton_callList_clicked()
-{
-    onFriendRequest(this->ui->lineEdit_addThisFriend->text());
 }
 
 void BabelWindow::on_pushButton_addToConf_clicked()

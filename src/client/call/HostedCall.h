@@ -6,6 +6,9 @@
 #include "ICall.h"
 #include "Callee.h"
 #include "eCalleeStatus.h"
+#include "ISoundManager.h"
+#include "SoundMixer.h"
+#include "SoundContainer.h"
 
 class ClientWorker;
 
@@ -20,6 +23,7 @@ public:
     virtual void    silence();
     virtual bool    isHost() const;
     virtual QString const   &getUsernameById(int) const;
+    virtual void    sendInput();
 
     void            start();
     unsigned short  getTcpPort() const;
@@ -32,6 +36,7 @@ public:
 signals:
 
 public slots:
+    void        receiveUdp();
 
 private slots:
     void        receiveNewTcpConnection();       
@@ -49,4 +54,7 @@ private:
     QList<Callee>       _allowedUser;
     QMap<int, Callee>   _connectedUsers;
     ClientWorker        &_worker;
+
+    ISoundManager       *_sManager;
+    SoundContainer      _container;
 };

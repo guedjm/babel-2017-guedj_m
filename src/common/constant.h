@@ -16,3 +16,6 @@
 #define DEFAULT_SERVER_DB_FILE	"babel_users.db"
 
 #define DEFAULT_CLIENT_UDP_PORT (5989)
+#define UDP_MAGIC_A             (13)
+#define UDP_MAGIC_B             (21)
+#define UDP_MAGIC_C             (34)

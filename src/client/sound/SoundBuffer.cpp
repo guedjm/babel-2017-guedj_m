@@ -20,17 +20,17 @@ int         SoundBuffer::pushEncriptedSound(unsigned char const *sound, int size
     unsigned char    *dest;
     int     newSize;
 
-    if (size > BUFFER_SIZE)
+    if (size > SOUND_SIZE_PER_SEC)
         throw std::exception();
-    newSize = MIN(BUFFER_SIZE, this->_size + size);
-    e = (this->_begin + this->_size) % BUFFER_SIZE;
-	if (newSize == BUFFER_SIZE)
+    newSize = MIN(SOUND_SIZE_PER_SEC, this->_size + size);
+    e = (this->_begin + this->_size) % SOUND_SIZE_PER_SEC;
+    if (newSize == SOUND_SIZE_PER_SEC)
 	{
-		this->_begin = (this->_begin + this->_size + size) % BUFFER_SIZE;
+        this->_begin = (this->_begin + this->_size + size) % SOUND_SIZE_PER_SEC;
 		std::cout << "SoundBuffer : override buffer ..." << std::endl;
 	}
 	dest = &this->_buff[e];
-    i = MIN(BUFFER_SIZE - e, size);
+    i = MIN(SOUND_SIZE_PER_SEC - e, size);
     memcpy(dest, sound, i);
     if (i != size)
         memcpy(this->_buff, sound + i, size - i);
@@ -43,14 +43,14 @@ int        SoundBuffer::cpyEncriptedSound(unsigned char *dest, int len)
     int     i;
     int     realSize;
 
-    if (len > BUFFER_SIZE )
+    if (len > SOUND_SIZE_PER_SEC )
         throw std::exception();
     realSize = MIN(this->_size, len);
-    i = MIN(BUFFER_SIZE - this->_begin, realSize);
+    i = MIN(SOUND_SIZE_PER_SEC - this->_begin, realSize);
     memcpy(dest, &this->_buff[this->_begin], i);
     if (i != realSize)
         memcpy(dest + i, this->_buff, realSize - i);
-    this->_begin = (this->_begin + realSize) % BUFFER_SIZE;
+    this->_begin = (this->_begin + realSize) % SOUND_SIZE_PER_SEC;
     this->_size -= realSize;
     return (realSize);
 }
@@ -62,7 +62,7 @@ void        SoundBuffer::print() const
     i = 0;
     std::cout << "SoundBuffer : size = " << this->_size << " 0x" << std::hex;
     for (; i < this->_size; ++i)
-        std::cout << this->_buff[(this->_begin + i) % BUFFER_SIZE];
+        std::cout << this->_buff[(this->_begin + i) % SOUND_SIZE_PER_SEC];
     std::cout << std::dec << std::endl;
 }
 

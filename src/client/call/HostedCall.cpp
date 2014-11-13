@@ -3,6 +3,7 @@
 #include "PacketHelper.h"
 #include "TCPPacketHeader.h"
 #include "ClientWorker.h"
+#include "PortAudioSoundManager.h"
 
 HostedCall::HostedCall(ClientWorker &worker, QObject *parent) :
     QObject(parent),
@@ -12,6 +13,7 @@ HostedCall::HostedCall(ClientWorker &worker, QObject *parent) :
     connect(&this->_tcpServer, SIGNAL(acceptError(QAbstractSocket::SocketError)), this, SLOT(onAcceptError(QAbstractSocket::SocketError)));
 
     connect(&this->_udpServer, SIGNAL(readyRead()), this, SLOT(onReceiveUdpPacket()));
+    this->_sManager = new PortAudioSoundManager(this->_container, this);
 }
 
 HostedCall::~HostedCall()
@@ -38,12 +40,26 @@ QString const   &HostedCall::getUsernameById(int id) const
     return (it->getUsername());
 }
 
+void            HostedCall::sendInput()
+{
+    int             size;
+    unsigned char   buff[BUFFER_SIZE];
+
+    size = this->_container.getInput().cpyEncriptedSound(buff, BUFFER_SIZE);
+    for (QMap<int, Callee>::iterator it = this->_connectedUsers.begin(); it != this->_connectedUsers.end(); ++it)
+    {
+        if (it.key() != 0)
+            this->_udpServer.writeDatagram((char*)buff, size, QHostAddress(it->getIp()), DEFAULT_CLIENT_UDP_PORT);
+    }
+}
+
 void            HostedCall::start()
 {
     if (!this->_tcpServer.listen())
         throw std::runtime_error("Cannot bind TCP server");
     if (!this->_udpServer.bind())
         throw std::runtime_error("Cannot bind UDP server");
+    this->_sManager->start();
 }
 
 unsigned short  HostedCall::getTcpPort() const
@@ -131,5 +147,32 @@ void            HostedCall::broadcastTcpMsg(int sender, const std::string &msg)
     {
         if (it.key() != sender)
             it->getSock()->write(msg.c_str(), msg.length());
+    }
+}
+
+void            HostedCall::receiveUdp()
+{
+    long int                size;
+    QHostAddress            from;
+    unsigned short          port;
+    long int                current_size;
+    char                    buff[BUFFER_SIZE];
+    struct UDPPacketHeader  header;
+
+    current_size = 0;
+    size = this->_udpServer.readDatagram(buff, BUFFER_SIZE, &from, &port);
+    std::istringstream st(buff, size);
+    while ((size - current_size) > sizeof(struct UDPPacketHeader))
+    {
+        if (PacketHelper::readUdpHeader(st, header) && (size >= current_size +  (sizeof(struct UDPPacketHeader) + header.payloadSize)))
+        {
+            for (QMap<int, Callee>::iterator it = this->_connectedUsers.begin(); it != this->_connectedUsers.end(); ++it)
+            {
+                if (it.key() != 0 && it.key() != header.senderID)
+                    this->_udpServer.writeDatagram(buff + current_size, header.payloadSize, QHostAddress(it->getIp()), DEFAULT_CLIENT_UDP_PORT);
+            }
+            this->_container.pushEncriptedOutputSound(header.senderID, (unsigned char*)buff, header.payloadSize);
+        }
+        current_size += (sizeof(struct UDPPacketHeader) + header.payloadSize);
     }
 }

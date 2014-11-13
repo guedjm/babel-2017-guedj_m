@@ -50,7 +50,7 @@ int							SoundContainer::getProducerCount() const
 	return (this->_producerCount);
 }
 
-void						SoundContainer::pushEncriptedOutputSound(int id, const char *voice, int size)
+void						SoundContainer::pushEncriptedOutputSound(int id, const unsigned char *voice, int size)
 {
 	this->_lockOutput->lock();
 	std::map<int, SoundBuffer>::iterator it = this->_voices.find(id);
@@ -78,7 +78,7 @@ void						SoundContainer::unlockVoices()
 	this->_lockOutput->unLock();
 }
 
-int							SoundContainer::pushInputSound(char *buff, int size)
+int							SoundContainer::pushInputSound(unsigned char *buff, int size)
 {
 	int						ret;
 

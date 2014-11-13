@@ -1,4 +1,5 @@
 #pragma once
+#include <QString>
 
 class       ICall
 {
@@ -10,4 +11,5 @@ public:
     virtual bool isHost() const = 0;
 
     virtual QString const   &getUsernameById(int) const = 0;
+    virtual void            sendInput() = 0;
 };

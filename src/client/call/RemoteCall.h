@@ -5,6 +5,8 @@
 #include <QObject>
 #include "ICall.h"
 #include "Callee.h"
+#include "ISoundManager.h"
+#include "SoundContainer.h"
 
 class ClientWorker;
 
@@ -19,6 +21,7 @@ public:
     virtual void            silence();
     virtual bool            isHost() const;
     virtual QString const   &getUsernameById(int) const;
+    virtual void            sendInput();
 
     void            start(QString const &, unsigned short);
     void            setMyId(unsigned int);
@@ -46,5 +49,7 @@ private:
     QMap<int, QString>  _connectedUsers;
     ClientWorker        &_worker;
 
+    ISoundManager       *_sManager;
+    SoundContainer      _container;
 };
 

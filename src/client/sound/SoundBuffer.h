@@ -16,7 +16,7 @@ public:
     int     getSize() const;
 
 private:
-    unsigned char    _buff[FRAMES_PER_BUFFER * NUM_CHANNELS];
+    unsigned char    _buff[SOUND_SIZE_PER_SEC];
     int     _begin;
     int     _size;
 };

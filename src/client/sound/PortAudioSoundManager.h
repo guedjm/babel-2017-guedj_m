@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ICall.h"
 #include "portaudio.h"
 #include "ISoundManager.h"
 #include "SoundParam.h"
@@ -11,7 +12,7 @@ int		portaudio_callback(const void *, void *, unsigned long, const PaStreamCallb
 class PortAudioSoundManager : public ISoundManager
 {
 public:
-	PortAudioSoundManager(SoundParam const &, SoundContainer&);
+    PortAudioSoundManager(SoundContainer&, ICall *);
 	virtual ~PortAudioSoundManager();
 
 	virtual int	start();
@@ -23,7 +24,7 @@ private:
 	PaStreamParameters	_inputParam;
 	PaStreamParameters	_outputParam;
 
-	SoundParam const	&_param;
+    ICall               *_call;
 	SoundContainer		&_container;
 	SoundMixer			_mixer;
 };

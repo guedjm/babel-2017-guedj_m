@@ -16,6 +16,6 @@ public:
 
 private:
 	float			_tmpF[SOUND_SIZE_PER_SEC];
-	unsigned char	_tmp[FRAMES_PER_BUFFER * NUM_CHANNELS];
+    unsigned char	_tmp[SOUND_SIZE_PER_SEC];
 	ICodecManager	*_codec;
 };

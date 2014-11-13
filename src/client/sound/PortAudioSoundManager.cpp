@@ -1,11 +1,11 @@
 #include <iostream>
 #include "PortAudioSoundManager.h"
 
-PortAudioSoundManager::PortAudioSoundManager(SoundParam const &param, SoundContainer &container) :
-	_param(param),
+PortAudioSoundManager::PortAudioSoundManager(SoundContainer &container, ICall *call) :
 	_container(container)
 {
 	this->_stream = 0;
+    this->_call = call;
 	if (Pa_Initialize() != paNoError)
 		throw std::exception();
 }
@@ -60,6 +60,7 @@ int				PortAudioSoundManager::callback(const void *input, void *output, unsigned
 	/* If mute */
 	this->_container.lockInput();
 	this->_mixer.encryptInput((const short *)input, framePerBuffer, this->_container.getInput());
+    this->_call->sendInput();
 	this->_container.unlockInput();
 
 	//Merge output

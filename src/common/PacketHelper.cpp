@@ -29,3 +29,16 @@ void        PacketHelper::writeTcpHeaderSize(std::string &msg)
 {
     msg = msg.replace(4, 4, Serializer::serialize<int>(msg.length() - sizeof(struct TCPPacketHeader)));
 }
+
+bool        PacketHelper::readUdpHeader(std::istringstream &st, UDPPacketHeader &header)
+{
+    header.magicA = Serializer::deserialize<char>(st);
+    header.magicB = Serializer::deserialize<char>(st);
+    header.magicC = Serializer::deserialize<char>(st);
+    header.senderID = Serializer::deserialize<char>(st);
+    header.payloadSize = Serializer::deserialize<int>(st);
+
+    if (header.magicA == UDP_MAGIC_A && header.magicB == UDP_MAGIC_B && header.magicC == UDP_MAGIC_C)
+        return (true);
+    return (false);
+}

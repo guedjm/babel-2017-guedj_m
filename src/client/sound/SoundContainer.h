@@ -15,13 +15,13 @@ public:
 	void						removeProducer(int);
 	int							getProducerCount() const;
 
-	void						pushEncriptedOutputSound(int, const char *, int);
+    void						pushEncriptedOutputSound(int, const unsigned char *, int);
 
 	void						lockVoices();
 	std::map<int, SoundBuffer>	&getVoices();
 	void						unlockVoices();
 
-	int							pushInputSound(char *, int);
+    int							pushInputSound(unsigned char *, int);
 
 	void						lockInput();
 	SoundBuffer					&getInput();

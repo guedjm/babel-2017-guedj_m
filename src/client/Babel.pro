@@ -25,7 +25,12 @@ SOURCES += main.cpp\
     data/Callee.cpp \
     call/HostedCall.cpp \
     call/RemoteCall.cpp \
-    ../common/PacketHelper.cpp
+    ../common/PacketHelper.cpp \
+    sound/OpusCodecManager.cpp \
+    sound/PortAudioSoundManager.cpp \
+    sound/SoundBuffer.cpp \
+    sound/SoundContainer.cpp \
+    sound/SoundMixer.cpp
 
 HEADERS  += \
     ClientWorker.h \
@@ -51,13 +56,26 @@ HEADERS  += \
     call/HostedCall.h \
     ../common/eCalleeStatus.h \
     call/RemoteCall.h \
-    ../common/PacketHelper.h
+    ../common/PacketHelper.h \
+    ../common/UDPPacketHeader.h \
+    sound/ICodecManager.h \
+    sound/ISoundManager.h \
+    sound/OpusCodecManager.h \
+    sound/PortAudioSoundManager.h \
+    sound/SoundBuffer.h \
+    sound/SoundConstant.h \
+    sound/SoundContainer.h \
+    sound/SoundMixer.h
 
 INCLUDEPATH += . \
                ../common \
                ../abstraction \
                ./data \
-               ./call
+               ./call \
+               ./sound \
+               ../../lib/portaudio/include \
+               ../../lib/opus-1.1/include
+
 DEFINES += "_CLIENT"
 
 FORMS += \
@@ -70,6 +88,7 @@ LIBS += ../../build/Win32/Debug/portaudio.lib \
         ../../build/Win32/Debug/silk_common.lib \
         ../../build/Win32/Debug/silk_fixed.lib \
         ../../build/Win32/Debug/silk_float.lib \
+        "C:\Program Files\Microsoft SDKs\Windows\v7.1\Lib\ksguid.lib" \
         winspool.lib \
         shlwapi.lib \
         rpcrt4.lib \
